@@ -1,10 +1,11 @@
 %define name            bouncycastle
 %define major           1
-%define minor           36
+%define minor           37
 %define archivever      %{major}%{minor}
 
 %define section         free
 %define build_free      1
+
 %if %{build_free}
 %define gcj_support     1
 %define with_jdk14      1
@@ -16,21 +17,22 @@
 %define with_jdk15      1
 %define with_jdk16      1
 %endif
+
 %if %{with_jdk14}
 %bcond_with                test
 %else
 %bcond_without             test
 %endif # with_jdk14
 
-Summary:        Bouncy Castle Crypto Package for Java
 Name:           %{name}
 Version:        %{major}.%{minor}
 Release:        %mkrel 1
 Epoch:          0
+Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
 License:        BSD
 URL:            http://www.bouncycastle.org/
-Source0:        http://www.bouncycastle.org/download/crypto-%{archivever}.tar.bz2
+Source0:        http://www.bouncycastle.org/download/crypto-%{archivever}.tar.gz
 %if !%{build_free}
 Source100:      http://www.bouncycastle.org/download/bcprov-jdk14-%{major}%{minor}.jar
 Source101:      http://www.bouncycastle.org/download/bcprov-jdk15-%{major}%{minor}.jar
@@ -168,7 +170,7 @@ Java 1.6 javadocs for %{name}.
 %endif
 
 %prep
-%setup -q -n crypto
+%setup -q -n crypto-%{archivever}
 %if %{build_free}
 %patch0 -p1 -b .build
 %endif
@@ -501,5 +503,3 @@ fi
 %doc %{_javadocdir}/%{name}-jdk16-%{version}/*
 %dir %{_javadocdir}/%{name}-jdk16
 %endif
-
-
