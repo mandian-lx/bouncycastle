@@ -50,21 +50,13 @@ BuildRequires:  ant-junit
 BuildRequires:  jaf
 BuildRequires:  javamail
 BuildRequires:  junit
-%if %{with_jdk15}
-BuildRequires:  java-devel >= 0:1.5.0
-%endif # jdk15
-%if %{with_jdk16}
-BuildRequires:  java-devel >= 0:1.6.0
-%endif # jdk16
-%if %{with_jdk14}
-BuildRequires:  java-devel < 0:1.5.0
-%endif
 BuildRequires:  jpackage-utils >= 0:1.5
 %if %{gcj_support}
 Requires(post): java-gcj-compat
 Requires(postun): java-gcj-compat
 BuildRequires:  java-gcj-compat-devel
 %else
+BuildRequires:  java-devel >= 0:1.4.0
 BuildArch:      noarch
 %endif # gcj_support
 
@@ -84,13 +76,15 @@ Requires:       %{name} = %{epoch}:%{version}
 Requires:       jaf
 Requires:       javamail
 Requires:       java >= 0:1.4.0
-Requires:       java < 0:1.5.0
+# FIXME: GCJ with 1.5.0 support still can't compile bc for 1.5
+#Requires:       java < 0:1.5.0
 %if %{gcj_support}
 Requires(post): java-gcj-compat
 Requires(postun): java-gcj-compat
 %endif
 BuildRequires:  java-devel >= 0:1.4.0
-BuildRequires:  java-devel < 0:1.5.0
+# FIXME: GCJ with 1.5.0 support still can't compile bc for 1.5
+#BuildRequires:  java-devel < 0:1.5.0
 Provides:       %{name}-provider = %{epoch}:%{version}
 Provides:       jce
 
@@ -201,7 +195,8 @@ export CLASSPATH=$(build-classpath jaf javamail/mailapi junit)
 %if %{with_jdk14}
 # 1.4
 JAVA_HOME=
-for javaver in 1.4.0 1.4.1 1.4.2; do
+# FIXME: GCJ with 1.5.0 support still can't compile bc for 1.5
+for javaver in 1.4.0 1.4.1 1.4.2 1.5.0; do
   [ -d "%{_jvmdir}/java-${javaver}" ] && \
   JAVA_HOME=%{_jvmdir}/java-${javaver}
 done
@@ -284,17 +279,20 @@ popd
 
 %{__mkdir_p} %{buildroot}%{_javadir}-ext
 %{__install} -m 644 bcprov-jdk14-%{version}.jar %{buildroot}%{_javadir}-ext
+(cd %{buildroot}%{_javadir}-ext && for jar in *-jdk14-%{version}.jar; do %{__ln_s} $jar $(echo $jar | %{__sed} s#-%{version}##g); done)
 for javaver in 1.4.0 1.4.1 1.4.2; do
    %{__mkdir_p} %{buildroot}%{_javadir}-${javaver}
    # FIXME
    (cd %{buildroot}%{_javadir}-${javaver} && %{__ln_s} ../../..%{_javadir}-ext/bcprov-jdk14-%{version}.jar bcprov-jdk14-%{version}.jar \
     && %{__ln_s} bcprov-jdk14-%{version}.jar bcprov-jdk14.jar)
 done
+%if %{gcj_support}
 %{__mkdir_p}  %{buildroot}%{_javadir}/gcj-endorsed
 # FIXME
 (cd %{buildroot}%{_javadir}/gcj-endorsed && %{__ln_s} ../../../..%{_javadir}-ext/bcprov-jdk14-%{version}.jar bcprov-jdk14-%{version}.jar)
 popd
-%endif
+%endif # gcj_support
+%endif # with_jdk14
 
 # Java 1.5
 %if %{with_jdk15}
@@ -316,6 +314,7 @@ popd
 
 %{__mkdir_p} %{buildroot}%{_javadir}-ext
 %{__install} -m 644 bcprov-jdk15-%{version}.jar %{buildroot}%{_javadir}-ext
+(cd %{buildroot}%{_javadir}-ext && for jar in *-jdk15-%{version}.jar; do %{__ln_s} $jar $(echo $jar | %{__sed} s#-%{version}##g); done)
 for javaver in 1.5.0; do
   %{__mkdir_p} %{buildroot}%{_javadir}-${javaver}
   # FIXME
@@ -323,6 +322,12 @@ for javaver in 1.5.0; do
    && %{__ln_s} bcprov-jdk15-%{version}.jar bcprov-jdk15.jar)
 done
 popd
+%if %{gcj_support}
+%{__mkdir_p}  %{buildroot}%{_javadir}/gcj-endorsed
+# FIXME
+(cd %{buildroot}%{_javadir}/gcj-endorsed && %{__ln_s} ../../../..%{_javadir}-ext/bcprov-jdk15-%{version}.jar bcprov-jdk15-%{version}.jar)
+popd
+%endif # gcj_support
 %endif # with_jdk15
 
 # Java 1.6
@@ -345,6 +350,7 @@ popd
 
 %{__mkdir_p} %{buildroot}%{_javadir}-ext
 %{__install} -m 644 bcprov-jdk16-%{version}.jar %{buildroot}%{_javadir}-ext
+(cd %{buildroot}%{_javadir}-ext && for jar in *-jdk16-%{version}.jar; do %{__ln_s} $jar $(echo $jar | %{__sed} s#-%{version}##g); done)
 for javaver in 1.6.0; do
   %{__mkdir_p} %{buildroot}%{_javadir}-${javaver}
   # FIXME
@@ -447,11 +453,12 @@ fi
 %{_javadir}/bc*-jdk14-%{version}.jar
 %{_javadir}/bc*-jdk14.jar
 %{_javadir}-ext/bcprov-jdk14-%{version}.jar
+%{_javadir}-ext/bcprov-jdk14.jar
 %{_javadir}-1.4.0/bcprov-jdk14*.jar
 %{_javadir}-1.4.1/bcprov-jdk14*.jar
 %{_javadir}-1.4.2/bcprov-jdk14*.jar
-%{_javadir}/gcj-endorsed/bcprov-jdk14-%{version}.jar
 %if %{gcj_support}
+%{_javadir}/gcj-endorsed/bcprov-jdk14-%{version}.jar
 %{_libdir}/gcj/%{name}/*-jdk14-%{version}.jar.*
 %endif
 %endif
@@ -462,8 +469,10 @@ fi
 %{_javadir}/bc*-jdk15-%{version}.jar
 %{_javadir}/bc*-jdk15.jar
 %{_javadir}-ext/bcprov-jdk15-%{version}.jar
+%{_javadir}-ext/bcprov-jdk15.jar
 %{_javadir}-1.5.0/bcprov-jdk15*.jar
 %if %{gcj_support}
+%{_javadir}/gcj-endorsed/bcprov-jdk15-%{version}.jar
 #%{_libdir}/gcj/%{name}/*-jdk15-%{version}.jar.*
 %endif
 %endif
@@ -474,6 +483,7 @@ fi
 %{_javadir}/bc*-jdk16-%{version}.jar
 %{_javadir}/bc*-jdk16.jar
 %{_javadir}-ext/bcprov-jdk16-%{version}.jar
+%{_javadir}-ext/bcprov-jdk16.jar
 %{_javadir}-1.6.0/bcprov-jdk16*.jar
 %if %{gcj_support}
 #%{_libdir}/gcj/%{name}/*-jdk16-%{version}.jar.*
