@@ -26,7 +26,7 @@
 
 Name:           %{name}
 Version:        %{major}.%{minor}
-Release:        %mkrel 1.1
+Release:        %mkrel 1.2
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -280,7 +280,8 @@ popd
 %{__mkdir_p} %{buildroot}%{_javadir}-ext
 %{__install} -m 644 bcprov-jdk14-%{version}.jar %{buildroot}%{_javadir}-ext
 (cd %{buildroot}%{_javadir}-ext && for jar in *-jdk14-%{version}.jar; do %{__ln_s} $jar $(echo $jar | %{__sed} s#-%{version}##g); done)
-for javaver in 1.4.0 1.4.1 1.4.2; do
+# FIXME: GCJ with 1.5.0 support still can't compile bc for 1.5
+for javaver in 1.4.0 1.4.1 1.4.2 1.5.0; do
    %{__mkdir_p} %{buildroot}%{_javadir}-${javaver}
    # FIXME
    (cd %{buildroot}%{_javadir}-${javaver} && %{__ln_s} ../../..%{_javadir}-ext/bcprov-jdk14-%{version}.jar bcprov-jdk14-%{version}.jar \
@@ -457,6 +458,7 @@ fi
 %{_javadir}-1.4.0/bcprov-jdk14*.jar
 %{_javadir}-1.4.1/bcprov-jdk14*.jar
 %{_javadir}-1.4.2/bcprov-jdk14*.jar
+%{_javadir}-1.5.0/bcprov-jdk14*.jar
 %if %{gcj_support}
 %{_javadir}/gcj-endorsed/bcprov-jdk14-%{version}.jar
 %{_libdir}/gcj/%{name}/*-jdk14-%{version}.jar.*
