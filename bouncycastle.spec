@@ -26,7 +26,7 @@
 
 Name:           %{name}
 Version:        %{major}.%{minor}
-Release:        %mkrel 1.2
+Release:        %mkrel 1.3
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -52,8 +52,6 @@ BuildRequires:  javamail
 BuildRequires:  junit
 BuildRequires:  jpackage-utils >= 0:1.5
 %if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
 BuildRequires:  java-gcj-compat-devel
 %else
 BuildRequires:  java-devel >= 0:1.4.0
@@ -78,10 +76,6 @@ Requires:       javamail
 Requires:       java >= 0:1.4.0
 # FIXME: GCJ with 1.5.0 support still can't compile bc for 1.5
 #Requires:       java < 0:1.5.0
-%if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
-%endif
 BuildRequires:  java-devel >= 0:1.4.0
 # FIXME: GCJ with 1.5.0 support still can't compile bc for 1.5
 #BuildRequires:  java-devel < 0:1.5.0
@@ -101,10 +95,6 @@ Requires:       jaf
 Requires:       javamail
 Requires:       java >= 0:1.5.0
 Requires:       java < 0:1.6.0
-%if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
-%endif
 BuildRequires:  java-devel >= 0:1.5.0
 BuildRequires:  java < 0:1.6.0
 Provides:       %{name}-provider = %{epoch}:%{version}
@@ -123,10 +113,6 @@ Requires:       jaf
 Requires:       javamail
 Requires:       java >= 0:1.6.0
 Requires:       java < 0:1.7.0
-%if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
-%endif
 BuildRequires:  java-devel >= 0:1.6.0
 BuildRequires:  java < 0:1.7.0
 Provides:       %{name}-provider = %{epoch}:%{version}
