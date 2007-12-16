@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 5.0.0
+Release:        %mkrel 5.0.1
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -21,7 +21,7 @@ BuildRequires:  ant-junit
 BuildRequires:  jaf
 BuildRequires:  javamail
 BuildRequires:  junit
-BuildRequires:  jpackage-utils >= 0:1.5
+BuildRequires:  java-rpmbuild >= 0:1.5
 %if %{gcj_support}
 BuildRequires:  java-gcj-compat-devel
 %else
