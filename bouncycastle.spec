@@ -36,6 +36,7 @@ Obsoletes:      %{name}-provider < %{epoch}:%{version}-%{release}
 Provides:       %{name}-provider = %{epoch}:%{version}-%{release}
 Provides:       jce = 1.7.0.0
 # END PROVIDER
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 The Bouncy Castle Crypto APIs consist of the following:
