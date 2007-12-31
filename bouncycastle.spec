@@ -1,5 +1,5 @@
 %define major           1
-%define minor           37
+%define minor           38
 %define archivever      %{major}%{minor}
 
 %define section         free
@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 5.0.1
+Release:        %mkrel 0.0.1
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -60,9 +60,7 @@ Javadocs for %{name}.
 
 %build
 export CLASSPATH=$(build-classpath jaf javamail/mailapi junit)
-export OPT_JAR_LIST="\
-$(%{__cat} %{_sysconfdir}/ant.d/junit)\
-"
+export OPT_JAR_LIST="`%{__cat} %{_sysconfdir}/ant.d/junit`"
 export JAVA_HOME=%{_jvmdir}/java-1.7.0
 ant -f jdk16.xml -Drelease.suffix=%{version} build-provider build build-test
 
@@ -122,7 +120,7 @@ fi
 # BEGIN PROVIDER
 %{_javadir}/bcmail-%{version}.jar
 %{_javadir}/bcpg-%{version}.jar
-%{_javadir}/bctest-1.37.jar
+%{_javadir}/bctest-%{version}.jar
 %{_javadir}/bctest.jar
 %{_javadir}/bctsp-%{version}.jar
 %{_javadir}/bcmail.jar
@@ -138,8 +136,8 @@ fi
 %{_libdir}/gcj/%{name}/bcmail-%{version}.jar.db
 %{_libdir}/gcj/%{name}/bcpg-%{version}.jar.so
 %{_libdir}/gcj/%{name}/bcpg-%{version}.jar.db
-%{_libdir}/gcj/%{name}/bctest-1.37.jar.db
-%{_libdir}/gcj/%{name}/bctest-1.37.jar.so
+%{_libdir}/gcj/%{name}/bctest-%{version}.jar.db
+%{_libdir}/gcj/%{name}/bctest-%{version}.jar.so
 %{_libdir}/gcj/%{name}/bctsp-%{version}.jar.so
 %{_libdir}/gcj/%{name}/bctsp-%{version}.jar.db
 %endif
