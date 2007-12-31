@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 0.0.1
+Release:        %mkrel 0.0.2
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -94,6 +94,11 @@ pushd build/artifacts/jdk1.6
 popd
 
 %if %{gcj_support}
+%{__mkdir_p} %{buildroot}%{_javadir}/gcj-endorsed
+(cd %{buildroot}%{_javadir}/gcj-endorsed && %{__ln_s} %{_javadir}/bcprov.jar .)
+%endif # gcj_support
+
+%if %{gcj_support}
 %{_bindir}/aot-compile-rpm
 %endif # gcj_support
 
@@ -129,6 +134,7 @@ fi
 %{_javadir}/bcprov-%{version}.jar
 %{_javadir}/bcprov.jar
 %if %{gcj_support}
+%{_javadir}/gcj-endorsed/bcprov.jar
 %dir %{_libdir}/gcj/%{name}
 %{_libdir}/gcj/%{name}/bcprov-%{version}.jar.so
 %{_libdir}/gcj/%{name}/bcprov-%{version}.jar.db
