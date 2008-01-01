@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 0.0.2
+Release:        %mkrel 0.0.3
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -36,6 +36,8 @@ Obsoletes:      %{name}-provider < %{epoch}:%{version}-%{release}
 Provides:       %{name}-provider = %{epoch}:%{version}-%{release}
 Provides:       jce = 1.7.0.0
 # END PROVIDER
+# (Anssi 01/2008) Obsolete the old jdk1.4 subpackage:
+Obsoletes:	bouncycastle-jdk1.4 < %{epoch}:%{version}-%{release}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
@@ -49,6 +51,7 @@ The Bouncy Castle Crypto APIs consist of the following:
 %package javadoc
 Group:          Development/Java
 Summary:        Javadocs for %{name}
+Obsoletes:      bouncycastle-javadoc-jdk1.4 < %{epoch}:%{version}-%{release}
 
 %description javadoc
 Javadocs for %{name}.
