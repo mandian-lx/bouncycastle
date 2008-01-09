@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 0.0.3
+Release:        %mkrel 0.0.4
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -18,8 +18,8 @@ Source0:        http://www.bouncycastle.org/download/crypto-%{archivever}.tar.gz
 Requires:       jpackage-utils >= 0:1.5
 BuildRequires:  ant
 BuildRequires:  ant-junit
-BuildRequires:  jaf
-BuildRequires:  javamail
+BuildRequires:  geronimo-jaf-1.0.2-api
+BuildRequires:  geronimo-javamail-1.3.1-api
 BuildRequires:  junit
 BuildRequires:  java-rpmbuild >= 0:1.5
 %if %{gcj_support}
@@ -28,8 +28,8 @@ BuildRequires:  java-gcj-compat-devel
 BuildArch:      noarch
 %endif # gcj_support
 # BEGIN PROVIDER
-Requires:       jaf
-Requires:       javamail
+Requires:       geronimo-jaf-1.0.2-api
+Requires:       geronimo-javamail-1.3.1-api
 BuildRequires:  java-devel >= 0:1.7.0
 BuildRequires:  java < 0:1.8.0
 Obsoletes:      %{name}-provider < %{epoch}:%{version}-%{release}
