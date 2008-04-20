@@ -1,5 +1,5 @@
 %define major           1
-%define minor           38
+%define minor           39
 %define archivever      %{major}%{minor}
 
 %define section         free
@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 0.0.4
+Release:        %mkrel 0.0.1
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
