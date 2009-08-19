@@ -1,14 +1,14 @@
 %define major           1
-%define minor           39
+%define minor           43
 %define archivever      %{major}%{minor}
 
 %define section         free
 
-%define gcj_support     1
+%define gcj_support     0
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 2.0.1
+Release:        %mkrel 1
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
@@ -28,9 +28,7 @@ BuildRequires:  java-gcj-compat-devel
 BuildArch:      noarch
 %endif # gcj_support
 # BEGIN PROVIDER
-Requires:       geronimo-jaf-1.0.2-api
-Requires:       geronimo-javamail-1.3.1-api
-BuildRequires:  java-devel >= 0:1.7.0
+BuildRequires:  java-devel
 BuildRequires:  java < 0:1.8.0
 Obsoletes:      %{name}-provider < %{epoch}:%{version}-%{release}
 Provides:       %{name}-provider = %{epoch}:%{version}-%{release}
@@ -47,6 +45,17 @@ The Bouncy Castle Crypto APIs consist of the following:
 - A clean room implementation of the JCE 1.2.1.
 - Generators for Version 1 and Version 3 X.509 certificates and PKCS12 files.
 - A signed jar version suitable for JDK 1.4 and the Sun JCE.
+
+%package extras
+Summary:	Extra packages of Bouncy Castle
+Group:		Development/Java
+Requires:	%{name}
+Requires:       geronimo-jaf-1.0.2-api
+Requires:       geronimo-javamail-1.3.1-api
+Conflicts:	bouncycastle < 1.43-1
+
+%description extras
+The SMIME/CMS, TSP, OpenPGP/BCPG portions of Bouncy Castle.
 
 %package javadoc
 Group:          Development/Java
@@ -65,7 +74,7 @@ Javadocs for %{name}.
 export CLASSPATH=$(build-classpath jaf javamail/mailapi junit)
 export OPT_JAR_LIST="`%{__cat} %{_sysconfdir}/ant.d/junit`"
 export JAVA_HOME=%{_jvmdir}/java-1.7.0
-ant -f jdk16.xml -Drelease.suffix=%{version} build-provider build build-test
+%ant -f jdk16.xml -Drelease.suffix=%{version} build-provider build build-test
 
 %install
 %{__rm} -rf %{buildroot}
@@ -96,10 +105,8 @@ pushd build/artifacts/jdk1.6
   done
 popd
 
-%if %{gcj_support}
 %{__mkdir_p} %{buildroot}%{_javadir}/gcj-endorsed
 (cd %{buildroot}%{_javadir}/gcj-endorsed && %{__ln_s} %{_javadir}/bcprov.jar .)
-%endif # gcj_support
 
 %if %{gcj_support}
 %{_bindir}/aot-compile-rpm
@@ -108,17 +115,19 @@ popd
 %clean
 %{__rm} -rf %{buildroot}
 
-%if %{gcj_support}
 %post
 if test -x %{_bindir}/rebuild-security-providers; then
   %{_bindir}/rebuild-security-providers
 fi
+%if %{gcj_support}
 %{update_gcjdb}
+%endif
 
 %postun
 if test -x %{_bindir}/rebuild-security-providers; then
   %{_bindir}/rebuild-security-providers
 fi
+%if %{gcj_support}
 %{clean_gcjdb}
 %endif # gcj_support
 
@@ -126,6 +135,18 @@ fi
 %defattr(0644,root,root,0755)
 %doc *.html
 # BEGIN PROVIDER
+%{_javadir}/bcprov-%{version}.jar
+%{_javadir}/bcprov.jar
+%{_javadir}/gcj-endorsed/bcprov.jar
+%if %{gcj_support}
+%dir %{_libdir}/gcj/%{name}
+%{_libdir}/gcj/%{name}/bcprov-%{version}.jar.so
+%{_libdir}/gcj/%{name}/bcprov-%{version}.jar.db
+%endif
+# END PROVIDER
+
+%files extras
+%defattr(-,root,root)
 %{_javadir}/bcmail-%{version}.jar
 %{_javadir}/bcpg-%{version}.jar
 %{_javadir}/bctest-%{version}.jar
@@ -134,13 +155,7 @@ fi
 %{_javadir}/bcmail.jar
 %{_javadir}/bcpg.jar
 %{_javadir}/bctsp.jar
-%{_javadir}/bcprov-%{version}.jar
-%{_javadir}/bcprov.jar
 %if %{gcj_support}
-%{_javadir}/gcj-endorsed/bcprov.jar
-%dir %{_libdir}/gcj/%{name}
-%{_libdir}/gcj/%{name}/bcprov-%{version}.jar.so
-%{_libdir}/gcj/%{name}/bcprov-%{version}.jar.db
 %{_libdir}/gcj/%{name}/bcmail-%{version}.jar.so
 %{_libdir}/gcj/%{name}/bcmail-%{version}.jar.db
 %{_libdir}/gcj/%{name}/bcpg-%{version}.jar.so
@@ -150,7 +165,6 @@ fi
 %{_libdir}/gcj/%{name}/bctsp-%{version}.jar.so
 %{_libdir}/gcj/%{name}/bctsp-%{version}.jar.db
 %endif
-# END PROVIDER
 
 %files javadoc
 %defattr(0644,root,root,0755)
