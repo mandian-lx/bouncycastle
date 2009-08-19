@@ -18,6 +18,9 @@ Source0:        http://www.bouncycastle.org/download/crypto-%{archivever}.tar.gz
 # Invalid characters in comments prevent build
 # "file" says they are UTF-8 but they are not
 Patch0:		crypto-invalid-characters.patch
+# UTF-8 characters in one testcase and one comment
+# FIXME: fix properly with javac command-line option or so
+Patch1:		crypto-utf8-characters.patch
 Requires:       jpackage-utils >= 0:1.5
 BuildRequires:  ant
 BuildRequires:  ant-junit
@@ -71,6 +74,7 @@ Javadocs for %{name}.
 %prep
 %setup -q -n crypto-%{archivever}
 %patch0 -p1
+%patch1 -p1
 %{_bindir}/find . -name '*.jar' | %{_bindir}/xargs -t %{__rm}
 %{__perl} -pi -e 's/<javac/<javac nowarn="true"/g' *.xml
 
