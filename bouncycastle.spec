@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        %{major}.%{minor}
-Release:        %mkrel 1
+Release:        %mkrel 2
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
