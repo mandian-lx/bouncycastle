@@ -7,8 +7,8 @@
 %define gcj_support     0
 
 Name:           bouncycastle
-Version:        %{major}.%{minor}
-Release:        %mkrel 3
+Version:        1.46
+Release:        %mkrel 1
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
