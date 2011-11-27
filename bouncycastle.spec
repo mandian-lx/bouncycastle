@@ -5,7 +5,7 @@
 Summary:          Bouncy Castle Crypto Package for Java
 Name:             bouncycastle
 Version:          %{ver}
-Release:          2
+Release:          4
 Group:            System/Libraries
 License:          MIT
 URL:              http://www.%{name}.org/
