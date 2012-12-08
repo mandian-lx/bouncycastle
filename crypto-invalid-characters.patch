@@ -1,0 +1,197 @@
+Index: crypto-143/src/org/bouncycastle/asn1/isismtt/ISISMTTObjectIdentifiers.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/asn1/isismtt/ISISMTTObjectIdentifiers.java
++++ crypto-143/src/org/bouncycastle/asn1/isismtt/ISISMTTObjectIdentifiers.java	2009-08-19 05:11:17.776932693 +0300
+@@ -69,7 +69,7 @@
+     /**
+      * 
+      * Reference for a file of a smartcard that stores the public key of this
+-     * certificate and that is used as �security anchor�.
++     * certificate and that is used as -invalid character retracted-security anchor-invalid character retracted-.
+      * 
+      * <pre>
+      *      PKReferenceSyntax ::= OCTET STRING (SIZE(20))
+Index: crypto-143/src/org/bouncycastle/asn1/isismtt/x509/AdmissionSyntax.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/asn1/isismtt/x509/AdmissionSyntax.java
++++ crypto-143/src/org/bouncycastle/asn1/isismtt/x509/AdmissionSyntax.java	2009-08-19 05:11:17.795932607 +0300
+@@ -63,7 +63,7 @@
+  * namingAuthorityUrl, or by a combination of them. For example, the text string
+  * can contain the name of the authority, the country and the name of the title
+  * register. The URL-option refers to a web page which contains lists with
+- * �officially� registered professions (text and possibly OID) as well as
++ * -invalid character retracted-officially-invalid character retracted- registered professions (text and possibly OID) as well as
+  * further information on these professions. Object identifiers for the
+  * component namingAuthorityId are grouped under the OID-branch
+  * id-isis-at-namingAuthorities and must be applied for.
+Index: crypto-143/src/org/bouncycastle/asn1/isismtt/x509/MonetaryLimit.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/asn1/isismtt/x509/MonetaryLimit.java
++++ crypto-143/src/org/bouncycastle/asn1/isismtt/x509/MonetaryLimit.java	2009-08-19 05:11:17.793932532 +0300
+@@ -33,7 +33,7 @@
+  * <p/>
+  * currency must be the ISO code.
+  * <p/>
+- * value = amount�10*exponent
++ * value = amount-invalid character retracted-10*exponent
+  */
+ public class MonetaryLimit
+     extends ASN1Encodable
+@@ -74,7 +74,7 @@
+      * Constructor from a given details.
+      * <p/>
+      * <p/>
+-     * value = amount�10^exponent
++     * value = amount-invalid character retracted-10^exponent
+      *
+      * @param currency The currency. Must be the ISO code.
+      * @param amount   The amount
+Index: crypto-143/src/org/bouncycastle/asn1/isismtt/x509/NamingAuthority.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/asn1/isismtt/x509/NamingAuthority.java
++++ crypto-143/src/org/bouncycastle/asn1/isismtt/x509/NamingAuthority.java	2009-08-19 05:11:17.797934082 +0300
+@@ -37,7 +37,7 @@
+     /**
+      * Profession OIDs should always be defined under the OID branch of the
+      * responsible naming authority. At the time of this writing, the work group
+-     * �Recht, Wirtschaft, Steuern� (�Law, Economy, Taxes�) is registered as the
++     * -invalid character retracted-Recht, Wirtschaft, Steuern-invalid character retracted- (-invalid character retracted-Law, Economy, Taxes-invalid character retracted-) is registered as the
+      * first naming authority under the OID id-isismtt-at-namingAuthorities.
+      */
+     public static final DERObjectIdentifier id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern =
+Index: crypto-143/src/org/bouncycastle/asn1/isismtt/x509/ProfessionInfo.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/asn1/isismtt/x509/ProfessionInfo.java
++++ crypto-143/src/org/bouncycastle/asn1/isismtt/x509/ProfessionInfo.java	2009-08-19 05:11:17.792931974 +0300
+@@ -36,7 +36,7 @@
+ {
+ 
+     /**
+-     * Rechtsanw�ltin
++     * Rechtsanw-invalid character retracted-ltin
+      */
+     public static final DERObjectIdentifier Rechtsanwltin = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".1");
+@@ -66,13 +66,13 @@
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".5");
+ 
+     /**
+-     * Steuerbevollm�chtigte
++     * Steuerbevollm-invalid character retracted-chtigte
+      */
+     public static final DERObjectIdentifier Steuerbevollmchtigte = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".6");
+ 
+     /**
+-     * Steuerbevollm�chtigter
++     * Steuerbevollm-invalid character retracted-chtigter
+      */
+     public static final DERObjectIdentifier Steuerbevollmchtigter = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".7");
+@@ -114,31 +114,31 @@
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".13");
+ 
+     /**
+-     * Wirtschaftspr�ferin
++     * Wirtschaftspr-invalid character retracted-ferin
+      */
+     public static final DERObjectIdentifier Wirtschaftsprferin = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".14");
+ 
+     /**
+-     * Wirtschaftspr�fer
++     * Wirtschaftspr-invalid character retracted-fer
+      */
+     public static final DERObjectIdentifier Wirtschaftsprfer = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".15");
+ 
+     /**
+-     * Vereidigte Buchpr�ferin
++     * Vereidigte Buchpr-invalid character retracted-ferin
+      */
+     public static final DERObjectIdentifier VereidigteBuchprferin = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".16");
+ 
+     /**
+-     * Vereidigter Buchpr�fer
++     * Vereidigter Buchpr-invalid character retracted-fer
+      */
+     public static final DERObjectIdentifier VereidigterBuchprfer = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".17");
+ 
+     /**
+-     * Patentanw�ltin
++     * Patentanw-invalid character retracted-ltin
+      */
+     public static final DERObjectIdentifier Patentanwltin = new DERObjectIdentifier(
+         NamingAuthority.id_isismtt_at_namingAuthorities_RechtWirtschaftSteuern + ".18");
+Index: crypto-143/src/org/bouncycastle/asn1/isismtt/ocsp/RequestedCertificate.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/asn1/isismtt/ocsp/RequestedCertificate.java
++++ crypto-143/src/org/bouncycastle/asn1/isismtt/ocsp/RequestedCertificate.java	2009-08-19 05:11:17.830933282 +0300
+@@ -19,7 +19,7 @@
+  * <p/>
+  * ISIS-MTT-SigG: The signature act allows publishing certificates only then,
+  * when the certificate owner gives his explicit permission. Accordingly, there
+- * may be �nondownloadable� certificates, about which the responder must provide
++ * may be -invalid character retracted-nondownloadable-invalid character retracted- certificates, about which the responder must provide
+  * status information, but MUST NOT include them in the response. Clients may
+  * get therefore the following three kind of answers on a single request
+  * including the RetrieveIfAllowed extension:
+Index: crypto-143/src/org/bouncycastle/jce/provider/PKIXCertPathValidatorSpi.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/jce/provider/PKIXCertPathValidatorSpi.java
++++ crypto-143/src/org/bouncycastle/jce/provider/PKIXCertPathValidatorSpi.java	2009-08-19 05:11:17.862932806 +0300
+@@ -27,7 +27,7 @@
+ import org.bouncycastle.x509.ExtendedPKIXParameters;
+ 
+ /**
+- * CertPathValidatorSpi implementation for X.509 Certificate validation � la RFC
++ * CertPathValidatorSpi implementation for X.509 Certificate validation -invalid character retracted- la RFC
+  * 3280.
+  */
+ public class PKIXCertPathValidatorSpi
+Index: crypto-143/src/org/bouncycastle/math/ec/ECAlgorithms.java
+===================================================================
+--- crypto-143/src/org/bouncycastle/math/ec/ECAlgorithms.java
++++ crypto-143/src/org/bouncycastle/math/ec/ECAlgorithms.java	2009-08-19 05:11:17.840932819 +0300
+@@ -30,7 +30,7 @@
+     /*
+      * "Shamir's Trick", originally due to E. G. Straus
+      * (Addition chains of vectors. American Mathematical Monthly,
+-     * 71(7):806�808, Aug./Sept. 1964)
++     * 71(7):806-invalid character retracted-808, Aug./Sept. 1964)
+      * <pre>
+      * Input: The points P, Q, scalar k = (km?, ... , k1, k0)
+      * and scalar l = (lm?, ... , l1, l0).
+Index: crypto-143/jdk1.3/org/bouncycastle/x509/examples/AttrCertExample.java
+===================================================================
+--- crypto-143/jdk1.3/org/bouncycastle/x509/examples/AttrCertExample.java
++++ crypto-143/jdk1.3/org/bouncycastle/x509/examples/AttrCertExample.java	2009-08-19 05:11:17.738932105 +0300
+@@ -191,7 +191,7 @@
+ 
+         /*
+          * Holder setzen hier als IssuerSerial Issuer und Serial sind ein
+-         * eindeutiger Schl�ssel f�r ein Client Zertifikat!
++         * eindeutiger Schl-invalid character retracted-ssel f-invalid character retracted-r ein Client Zertifikat!
+          */
+ 
+         acGen.setHolder(new AttributeCertificateHolder(clientCert));
+@@ -200,7 +200,7 @@
+ 
+         acGen.setIssuer(new AttributeCertificateIssuer(PrincipalUtil.getSubjectX509Principal(caCert)));
+ 
+-        // Serial Number (frei gew�hlt)
++        // Serial Number (frei gew-invalid character retracted-hlt)
+         acGen.setSerialNumber(new BigInteger("1"));
+ 
+         // not Before
+@@ -251,7 +251,7 @@
+         System.out.println("valid not before: " + att.getNotBefore());
+         System.out.println("valid not before: " + att.getNotAfter());
+ 
+-        // Dates checken (bc wirft NotValid Exception wenn nicht g�ltig)
++        // Dates checken (bc wirft NotValid Exception wenn nicht g-invalid character retracted-ltig)
+ 
+         try
+         {
