@@ -20,6 +20,7 @@ BuildArch:        noarch
 BuildRequires:    java-devel >= 1.7
 Requires:         java >= 1.7
 BuildRequires:    junit4
+BuildRequires:    java-rpmbuild
 
 Provides:         bcprov = %{version}-%{release}
 
