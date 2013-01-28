@@ -1,4 +1,2 @@
 sources:
-  bcprov-jdk16-1.46.pom: ece97b6d9b03ec2c7ebba4a9271fdf1dd074469f
-  bcprov-jdk16-146.tar.gz: dc777204acc0f5bfbbf4a5e42bda40f3ec318192
-  crypto-143.tar.gz: ed14f1d01c0e6d385f71132a498f9b16c384da31
+  "crypto-143.tar.gz": ed14f1d01c0e6d385f71132a498f9b16c384da31
