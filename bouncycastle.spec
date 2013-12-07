@@ -8,7 +8,7 @@
 
 Name:           bouncycastle
 Version:        1.46
-Release:        3
+Release:        4
 Epoch:          0
 Summary:        Bouncy Castle Crypto Package for Java
 Group:          Development/Java
