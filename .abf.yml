@@ -1,2 +1,3 @@
 sources:
-  bcprov-jdk16-146.tar.gz: dc777204acc0f5bfbbf4a5e42bda40f3ec318192
+  bcprov-jdk15on-1.50.pom: e9fb1c57f8dfd27f2791d9748f6985f0b5012639
+  bcprov-jdk15on-150.tar.gz: 5fc554a5c36234412e98fff3c6f14a8ead6afef6

@@ -1,37 +1,36 @@
 %{?_javapackages_macros:%_javapackages_macros}
-%global ver  1.46
-%global archivever  jdk16-%(echo %{ver}|sed 's|\\\.||')
-%global classname   org.bouncycastle.jce.provider.BouncyCastleProvider
+%global ver 1.50
+%global archivever jdk15on-%(echo %{ver}|sed 's|\\\.||')
+%global classname org.bouncycastle.jce.provider.BouncyCastleProvider
 
 Summary:          Bouncy Castle Crypto Package for Java
 Name:             bouncycastle
 Version:          %{ver}
-Release:          11.0%{?dist}
+Release:          5%{?dist}
 License:          MIT
-URL:              http://www.%{name}.org/
+URL:              http://www.bouncycastle.org
 # Use original sources from here on out.
 Source0:          http://www.bouncycastle.org/download/bcprov-%{archivever}.tar.gz
-Source1:          http://repo2.maven.org/maven2/org/bouncycastle/bcprov-jdk16/%{version}/bcprov-jdk16-%{version}.pom
-BuildRequires:    jpackage-utils >= 1.5
-Requires:         jpackage-utils >= 1.5
-Requires(post):   jpackage-utils >= 1.7
-Requires(postun): jpackage-utils >= 1.7
+Source1:          http://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/%{ver}/bcprov-jdk15on-%{ver}.pom
+BuildRequires:    javapackages-tools
+Requires:         javapackages-tools
+Requires(post):   javapackages-tools
+Requires(postun): javapackages-tools
 BuildArch:        noarch
-BuildRequires:    java-devel >= 1.7
-Requires:         java >= 1.7
+BuildRequires:    java-devel
+Requires:         java-headless
 BuildRequires:    junit
 
 Provides:         bcprov = %{version}-%{release}
 
 %description
 The Bouncy Castle Crypto package is a Java implementation of cryptographic
-algorithms. The package is organised so that it contains a light-weight API
+algorithms. The package is organized so that it contains a light-weight API
 suitable for use in any environment (including the newly released J2ME) with
 the additional infrastructure to conform the algorithms to the JCE framework.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Requires:       %{name} = %{version}-%{release}
 
 %description javadoc
 API documentation for the %{name} package.
@@ -49,7 +48,7 @@ unzip -qq src.zip -d src/
 %build
 pushd src
   export CLASSPATH=$(build-classpath junit)
-  %javac -g -source 1.6 -target 1.6 -encoding UTF-8 $(find . -type f -name "*.java")
+  %javac -g -source 1.5 -target 1.5 -encoding UTF-8 $(find . -type f -name "*.java")
   jarfile="../bcprov.jar"
   # Exclude all */test/* files except org.bouncycastle.util.test, cf. upstream
   files="$(find . -type f \( -name '*.class' -o -name '*.properties' \) -not -path '*/test/*')"
@@ -83,7 +82,7 @@ cp -pr docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 # maven pom
 install -dm 755 $RPM_BUILD_ROOT%{_mavenpomdir}
 install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-bcprov.pom
-%add_maven_depmap JPP-bcprov.pom bcprov.jar
+%add_maven_depmap -a "bouncycastle:bcprov-jdk15,org.bouncycastle:bcprov-jdk16,org.bouncycastle:bcprov-jdk15" JPP-bcprov.pom bcprov.jar
 
 %check
 pushd src
@@ -144,18 +143,36 @@ if [ $1 -eq 0 ] ; then
 
 fi
 
-%files
+%files -f .mfiles
 %doc *.html
-%{_javadir}/bcprov.jar
 %{_javadir}/gcj-endorsed/bcprov.jar
 %{_sysconfdir}/java/security/security.d/2000-%{classname}
-%{_mavenpomdir}/JPP-bcprov.pom
-%{_mavendepmapfragdir}/%{name}
 
 %files javadoc
 %{_javadocdir}/%{name}/
 
 %changelog
+* Wed Oct 22 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.50-5
+- Add alias for org.bouncycastle:bcprov-jdk15
+
+* Mon Jun 09 2014 Michal Srb <msrb@redhat.com> - 1.50-4
+- Migrate to .mfiles
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.50-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Feb 26 2014 Michal Srb <msrb@redhat.com> - 1.50-2
+- Fix java BR/R
+- Build with -source/target 1.5
+- s/organised/organized/
+
+* Fri Feb 21 2014 Michal Srb <msrb@redhat.com> - 1.50-1
+- Update to upstream version 1.50
+- Switch to java-headless
+
+* Mon Jan  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.46-12
+- Add Maven alias for bouncycastle:bcprov-jdk15
+
 * Tue Oct 22 2013 gil cattaneo <puntogil@libero.it> 1.46-11
 - remove versioned Jars
 
@@ -284,3 +301,4 @@ fi
 
 * Fri Jul  7 2006 Thomas Fitzsimmons <fitzsim@redhat.com> - 1.33-1
 - First release.
+
