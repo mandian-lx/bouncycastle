@@ -59,7 +59,8 @@ find . -type f -name "*.jar" -exec rm -f {} \;
 cp -p %{SOURCE3} bc.bnd
 sed -i "s|@VERSION@|%{version}|" bc.bnd
 
-%mvn_alias :bcprov-jdk15on "bouncycastle:bcprov-jdk15" "org.bouncycastle:bcprov-jdk16" "org.bouncycastle:bcprov-jdk15"
+#mvn_file :bcprov-jdk15on bcprov
+#mvn_alias :bcprov-jdk15on "bouncycastle:bcprov-jdk15" "org.bouncycastle:bcprov-jdk16" "org.bouncycastle:bcprov-jdk15"
 
 %build
 pushd src
