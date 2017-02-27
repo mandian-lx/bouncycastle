@@ -48,7 +48,7 @@ API documentation for the %{name} package.
 # Unzip source and test suite resources
 mkdir src
 unzip -qq src.zip -d src/
-unzip -qq %{SOURCE1} 'PKITS/*' 'org/bouncycastle/*' -x '*.class' -d src
+unzip -qq %{SOURCE1} 'PKITS/**' 'org/bouncycastle/**' -x '**.class' -d src
 
 cp -p %{SOURCE2} pom.xml
 
