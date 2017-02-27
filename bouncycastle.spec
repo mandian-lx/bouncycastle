@@ -22,7 +22,7 @@ Source3:          bouncycastle-OSGi.bnd
 BuildRequires:    aqute-bnd
 BuildRequires:    java-devel
 BuildRequires:    junit
-BuildRequires:    javapackages-local
+BuildRequires:    javapackages-tools
 Requires(post):   javapackages-tools
 Requires(postun): javapackages-tools
 
