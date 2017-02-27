@@ -1,37 +1,43 @@
 %{?_javapackages_macros:%_javapackages_macros}
-%global ver  1.46
-%global archivever  jdk16-%(echo %{ver}|sed 's|\\\.||')
-%global classname   org.bouncycastle.jce.provider.BouncyCastleProvider
+
+%global ver 1.54
+%global archivever jdk15on-%(echo %{ver}|sed 's|\\\.||')
+%global classname org.bouncycastle.jce.provider.BouncyCastleProvider
 
 Summary:          Bouncy Castle Crypto Package for Java
 Name:             bouncycastle
 Version:          %{ver}
-Release:          11.0%{?dist}
+Release:          1
 License:          MIT
-URL:              http://www.%{name}.org/
-# Use original sources from here on out.
+URL:              http://www.bouncycastle.org
+
+# Source tarball contains everything except test suite rousources
 Source0:          http://www.bouncycastle.org/download/bcprov-%{archivever}.tar.gz
-Source1:          http://repo2.maven.org/maven2/org/bouncycastle/bcprov-jdk16/%{version}/bcprov-jdk16-%{version}.pom
-BuildRequires:    jpackage-utils >= 1.5
-Requires:         jpackage-utils >= 1.5
-Requires(post):   jpackage-utils >= 1.7
-Requires(postun): jpackage-utils >= 1.7
-BuildArch:        noarch
-BuildRequires:    java-devel >= 1.7
-Requires:         java >= 1.7
+# Test suite resources are found in this jar
+Source1:          http://www.bouncycastle.org/download/bctest-%{archivever}.jar
+
+Source2:          http://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/%{ver}/bcprov-jdk15on-%{ver}.pom
+Source3:          bouncycastle-OSGi.bnd
+
+BuildRequires:    aqute-bnd
+BuildRequires:    java-devel
 BuildRequires:    junit
+BuildRequires:    javapackages-local
+Requires(post):   javapackages-tools
+Requires(postun): javapackages-tools
+
+BuildArch:        noarch
 
 Provides:         bcprov = %{version}-%{release}
 
 %description
 The Bouncy Castle Crypto package is a Java implementation of cryptographic
-algorithms. The package is organised so that it contains a light-weight API
+algorithms. The package is organized so that it contains a light-weight API
 suitable for use in any environment (including the newly released J2ME) with
 the additional infrastructure to conform the algorithms to the JCE framework.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Requires:       %{name} = %{version}-%{release}
 
 %description javadoc
 API documentation for the %{name} package.
@@ -39,62 +45,61 @@ API documentation for the %{name} package.
 %prep
 %setup -q -n bcprov-%{archivever}
 
+# Unzip source and test suite resources
+mkdir src
+unzip -qq src.zip -d src/
+unzip -qq %{SOURCE1} 'PKITS/**' 'org/bouncycastle/**' -x '**.class' -d src
+
+cp -p %{SOURCE2} pom.xml
+
 # Remove provided binaries
 find . -type f -name "*.class" -exec rm -f {} \;
 find . -type f -name "*.jar" -exec rm -f {} \;
 
-mkdir src
-unzip -qq src.zip -d src/
+cp -p %{SOURCE3} bc.bnd
+sed -i "s|@VERSION@|%{version}|" bc.bnd
+
+%mvn_file :bcprov-jdk15on bcprov
+%mvn_alias :bcprov-jdk15on "bouncycastle:bcprov-jdk15" "org.bouncycastle:bcprov-jdk16" "org.bouncycastle:bcprov-jdk15"
 
 %build
 pushd src
   export CLASSPATH=$(build-classpath junit)
-  %javac -g -source 1.6 -target 1.6 -encoding UTF-8 $(find . -type f -name "*.java")
+  javac -g -source 1.6 -target 1.6 -encoding UTF-8 $(find . -type f -name "*.java")
   jarfile="../bcprov.jar"
   # Exclude all */test/* files except org.bouncycastle.util.test, cf. upstream
   files="$(find . -type f \( -name '*.class' -o -name '*.properties' \) -not -path '*/test/*')"
   files="$files $(find . -type f -path '*/org/bouncycastle/util/test/*.class')"
-  files="$files $(find . -type f -path '*/org/bouncycastle/jce/provider/test/*.class')"
-  files="$files $(find . -type f -path '*/org/bouncycastle/ocsp/test/*.class')"
   test ! -d classes && mf="" \
     || mf="`find classes/ -type f -name "*.mf" 2>/dev/null`"
-  test -n "$mf" && jar cvfm $jarfile $mf $files \
-    || %jar cvf $jarfile $files
+  test -n "$mf" && jar cfm $jarfile $mf $files \
+    || jar cf $jarfile $files
 popd
+
+java -jar $(build-classpath aqute-bnd) wrap -properties bc.bnd bcprov.jar
+mv bcprov.bar bcprov.jar
+%mvn_artifact pom.xml bcprov.jar
 
 %install
 install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d
 touch $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d/2000-%{classname}
 
-# install bouncy castle provider
-install -dm 755 $RPM_BUILD_ROOT%{_javadir}
-install -pm 644 bcprov.jar \
-  $RPM_BUILD_ROOT%{_javadir}/
-
-install -dm 755 $RPM_BUILD_ROOT%{_javadir}/gcj-endorsed
-pushd $RPM_BUILD_ROOT%{_javadir}/gcj-endorsed
-  ln -sf ../bcprov.jar bcprov.jar
-popd
-
-# javadoc
-mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr docs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-# maven pom
-install -dm 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-bcprov.pom
-%add_maven_depmap JPP-bcprov.pom bcprov.jar
+%mvn_install -J javadoc
 
 %check
+# There was 1 failure:
+# 1) testJCE(org.bouncycastle.jce.provider.test.AllTests$SimpleTestTest)
+# junit.framework.AssertionFailedError: CertPathValidator:
+# Exception: org.bouncycastle.jce.exception.ExtCertPathValidatorException:
+# Could not validate certificate: certificate expired on 20160803124921GMT+00:00
 pushd src
-  export CLASSPATH=$PWD:$(build-classpath junit)
+  export CLASSPATH=$PWD:$(build-classpath junit hamcrest/core)
   for test in $(find . -name AllTests.class) ; do
     test=${test#./} ; test=${test%.class} ; test=${test//\//.}
     # TODO: failures; get them fixed and remove || :
-    %java org.junit.runner.JUnitCore $test || :
+    java -Dbc.test.data.home=$(pwd) org.junit.runner.JUnitCore $test || :
   done
 popd
-
 
 %post
 {
@@ -144,18 +149,78 @@ if [ $1 -eq 0 ] ; then
 
 fi
 
-%files
-%doc *.html
-%{_javadir}/bcprov.jar
-%{_javadir}/gcj-endorsed/bcprov.jar
+%files -f .mfiles
+%doc CONTRIBUTORS.html index.html
+%doc LICENSE.html
 %{_sysconfdir}/java/security/security.d/2000-%{classname}
-%{_mavenpomdir}/JPP-bcprov.pom
-%{_mavendepmapfragdir}/%{name}
 
-%files javadoc
-%{_javadocdir}/%{name}/
+%files javadoc -f .mfiles-javadoc
+%doc LICENSE.html
 
 %changelog
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.54-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Tue Aug 09 2016 gil cattaneo <puntogil@libero.it> 1.54-2
+- readd workaround for test failures
+
+* Thu Apr 07 2016 Mat Booth <mat.booth@redhat.com> - 1.54-1
+- Update to 1.54, fixes rhbz#1270249
+- Install with mvn_install
+- Fix test suite failures, fixes rhbz#1049007
+- Move some tests that were erroneously in the main jar,
+  avoids a runtime dep on junit in OSGi metadata
+
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.52-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Thu Jul 16 2015 Michael Simacek <msimacek@redhat.com> - 1.52-7
+- Re-add geenric Export-Package
+
+* Thu Jul 16 2015 Michael Simacek <msimacek@redhat.com> - 1.52-6
+- Use aqute-bnd-2.4.1
+
+* Tue Jun 23 2015 Roland Grunberg <rgrunber@redhat.com> - 1.52-5
+- Remove Import/Export-Package statements.
+- Related: rhbz#1233354
+
+* Mon Jun 22 2015 Roland Grunberg <rgrunber@redhat.com> - 1.52-4
+- Fix typo in OSGi metadata file.
+
+* Thu Jun 18 2015 Mat Booth <mat.booth@redhat.com> - 1.52-3
+- Resolves: rhbz#1233354 - Add OSGi metadata
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.52-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Apr 22 2015 Alexander Kurtakov <akurtako@redhat.com> 1.52-1
+- Update to 1.52.
+- Switch source/target to 1.6 as 1.5 is deprecated
+
+* Thu Jan 29 2015 gil cattaneo <puntogil@libero.it> 1.50-6
+- introduce license macro
+
+* Wed Oct 22 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.50-5
+- Add alias for org.bouncycastle:bcprov-jdk15
+
+* Mon Jun 09 2014 Michal Srb <msrb@redhat.com> - 1.50-4
+- Migrate to .mfiles
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.50-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed Feb 26 2014 Michal Srb <msrb@redhat.com> - 1.50-2
+- Fix java BR/R
+- Build with -source/target 1.5
+- s/organised/organized/
+
+* Fri Feb 21 2014 Michal Srb <msrb@redhat.com> - 1.50-1
+- Update to upstream version 1.50
+- Switch to java-headless
+
+* Mon Jan  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.46-12
+- Add Maven alias for bouncycastle:bcprov-jdk15
+
 * Tue Oct 22 2013 gil cattaneo <puntogil@libero.it> 1.46-11
 - remove versioned Jars
 
@@ -240,7 +305,7 @@ fi
 * Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.41-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Wed Nov 11 2008 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 1.41-2
+* Tue Nov 11 2008 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 1.41-2
 - Fixed license tag (BSD -> MIT).
 - Minor improvements in the SPEC file for better compatibility with the 
   Fedora Java Packaging Guidelines.
