@@ -77,7 +77,6 @@ pushd src
 popd
 
 java -jar $(build-classpath aqute-bnd) wrap -properties bc.bnd bcprov.jar
-#bnd wrap -p bc.bnd -o bcprov.bar bcprov.jar
 mv bcprov.bar bcprov.jar
 %mvn_artifact pom.xml bcprov.jar
 
