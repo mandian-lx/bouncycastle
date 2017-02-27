@@ -1,3 +1,5 @@
 sources:
-  bcprov-jdk15on-1.50.pom: e9fb1c57f8dfd27f2791d9748f6985f0b5012639
-  bcprov-jdk15on-150.tar.gz: 5fc554a5c36234412e98fff3c6f14a8ead6afef6
+  bcprov-jdk15on-1.54.pom:	3d0c5e6f1cccd910b9711f928853bf4cc43c4f33
+  bcprov-jdk15on-154.tar.gz:	346c4e0d14285a2f92ab404e1d2b3bc7a2245680
+  bctest-jdk15on-154.jar:	216ae5805aa03415c17a5332e6e5a0b9fc711098
+  bouncycastle-OSGi.bnd:	aa438b064d1144fdb871ff46625d136522e4d02f
