@@ -23,6 +23,7 @@ BuildRequires:    aqute-bnd
 BuildRequires:    java-devel
 BuildRequires:    junit
 BuildRequires:    jpackage-utils
+BuildRequires:    maven-local
 Requires(post):   javapackages-tools
 Requires(postun): javapackages-tools
 
